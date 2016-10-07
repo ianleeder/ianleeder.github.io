@@ -1,0 +1,140 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Nerd Weekend!</title>
+    <style type="text/css">
+        html, body, .container {
+            height: 100%;
+        }
+
+        .container {
+            position: relative;
+            text-align: center;
+        }
+
+        .container > p {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            margin-top: -27px;
+            color: white;
+            font-size: 300%;
+        }
+
+        body {
+            background: no-repeat center center fixed;
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            -o-background-size: cover;
+            background-size: cover;
+        }
+    </style>
+
+</head>
+<body>
+    <div class="container">
+        <p id="cntdwn" />
+    </div>
+    <!--
+    Javascript taken from here:
+    http://scripts.hashemian.com/js/countdown.js
+
+    Author: Robert Hashemian
+    http://www.hashemian.com/
+    -->
+    <script language="JavaScript">
+        TargetDate = "11/4/2016 8:00 PM";
+        CountActive = true;
+        CountStepper = -1;
+        LeadingZero = true;
+        DisplayFormat = "<b>It's back on!</b><br>%%D%% Days, %%H%% Hours, %%M%% Minutes, %%S%% Seconds.";
+        FinishMessage = "Nerd time!";
+        SetTimeOutPeriod = 0;
+        ReInit = false;
+        var images=['dorkathon.jpg',
+                    'duct_tape.jpg',
+                    'dim_sim_nachos.jpg',
+                    'can_pyramid.jpg',
+                    'computer_nerd.jpg',
+                    'popcorn_hoodie.jpg',
+                    'bill_gates.jpg',
+                    'nerd_reclined.jpg'];
+
+        function calcage(secs, num1, num2) {
+            s = ((Math.floor(secs / num1)) % num2).toString();
+            if (LeadingZero && s.length < 2)
+                s = "0" + s;
+            return "<b>" + s + "</b>";
+        }
+
+        function CountBack(secs) {
+            if (secs < 0) {
+                document.getElementById("cntdwn").innerHTML = FinishMessage;
+                return;
+            }
+
+            /*
+                Reinitialise every 10 minutes, on the 10-minute marker.
+                This will help keep clock from drifting (it never re-syncs),
+                and also pick a new random background.
+                Flag a re-init to action next loop, otherwise we end up in
+                an infinite loop.
+            */
+            if(ReInit)
+            {
+                ReInit = false;
+                init();
+                return;
+            }
+
+            if(secs % 600 === 0) {
+                ReInit = true;
+            }
+
+            DisplayStr = DisplayFormat.replace(/%%D%%/g, calcage(secs, 86400, 100000));
+            DisplayStr = DisplayStr.replace(/%%H%%/g, calcage(secs, 3600, 24));
+            DisplayStr = DisplayStr.replace(/%%M%%/g, calcage(secs, 60, 60));
+            DisplayStr = DisplayStr.replace(/%%S%%/g, calcage(secs, 1, 60));
+
+            document.getElementById("cntdwn").innerHTML = DisplayStr;
+            if (CountActive)
+                setTimeout("CountBack(" + (secs + CountStepper) + ")", SetTimeOutPeriod);
+        }
+
+        function init() {
+            if (typeof (TargetDate) == "undefined")
+                TargetDate = "12/31/2020 5:00 AM";
+            if (typeof (DisplayFormat) == "undefined")
+                DisplayFormat = "%%D%% Days, %%H%% Hours, %%M%% Minutes, %%S%% Seconds.";
+            if (typeof (CountActive) == "undefined")
+                CountActive = true;
+            if (typeof (FinishMessage) == "undefined")
+                FinishMessage = "";
+            if (typeof (CountStepper) != "number")
+                CountStepper = -1;
+            if (typeof (LeadingZero) == "undefined")
+                LeadingZero = true;
+
+            // Randomly pick a background image
+            var num = Math.floor( Math.random() * images.length );
+            document.body.style.backgroundImage = 'url('+images[num]+')';
+
+            CountStepper = Math.ceil(CountStepper);
+            if (CountStepper == 0)
+                CountActive = false;
+            SetTimeOutPeriod = (Math.abs(CountStepper) - 1) * 1000 + 990;
+            var dthen = new Date(TargetDate);
+            var dnow = new Date();
+            if (CountStepper > 0)
+                ddiff = new Date(dnow - dthen);
+            else
+                ddiff = new Date(dthen - dnow);
+            gsecs = Math.floor(ddiff.valueOf() / 1000);
+            CountBack(gsecs);
+        }
+
+        init();
+    </script>
+</body>
+</html>
