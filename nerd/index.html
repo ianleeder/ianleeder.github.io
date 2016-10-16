@@ -123,7 +123,7 @@
             CountStepper = Math.ceil(CountStepper);
             if (CountStepper == 0)
                 CountActive = false;
-            SetTimeOutPeriod = (Math.abs(CountStepper) - 1) * 1000 + 990;
+            SetTimeOutPeriod = (Math.abs(CountStepper) - 1) * 1000 + 250;
             var dthen = new Date(TargetDate);
             var dnow = new Date();
             if (CountStepper > 0)
