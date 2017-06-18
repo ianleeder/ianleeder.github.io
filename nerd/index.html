@@ -44,7 +44,7 @@
     http://www.hashemian.com/
     -->
     <script language="JavaScript">
-        TargetDate = "11/3/2016 8:00 PM";
+        TargetDate = "7/14/2017 5:00 PM";
         CountActive = true;
         CountStepper = -1;
         LeadingZero = true;
@@ -59,7 +59,8 @@
                     'computer_nerd.jpg',
                     'popcorn_hoodie.jpg',
                     'bill_gates.jpg',
-                    'nerd_reclined.jpg'];
+                    'nerd_reclined.jpg',
+                    'civilisation.jpg'];
 
         function calcage(secs, num1, num2) {
             s = ((Math.floor(secs / num1)) % num2).toString();
@@ -123,7 +124,7 @@
             CountStepper = Math.ceil(CountStepper);
             if (CountStepper == 0)
                 CountActive = false;
-            SetTimeOutPeriod = (Math.abs(CountStepper) - 1) * 1000 + 250;
+            SetTimeOutPeriod = (Math.abs(CountStepper) - 1) * 1000 + 1000;
             var dthen = new Date(TargetDate);
             var dnow = new Date();
             if (CountStepper > 0)
