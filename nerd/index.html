@@ -12,7 +12,7 @@
             text-align: center;
         }
 
-        .container > p {
+        .container > p#cntdwn {
             position: absolute;
             top: 50%;
             left: 0;
@@ -22,6 +22,13 @@
             font-size: 300%;
         }
 
+        p.notice {
+            background: rgba(55, 55, 55, 0.5);
+            font-size: 200%;
+            font-weight: bold;
+            color: red;
+        }
+
         body {
             background: no-repeat center center fixed;
             -webkit-background-size: cover;
@@ -29,11 +36,87 @@
             -o-background-size: cover;
             background-size: cover;
         }
+
+        #cntdwn {
+            background: rgba(55, 55, 55, 0.5);
+        }
+
+        /* https://www.w3schools.com/howto/howto_css_switch.asp */
+        /* The switch - the box around the slider */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        /* Hide default HTML checkbox */
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        /* The slider */
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+        input:checked + .slider {
+            background-color: #2196F3;
+        }
+
+        input:focus + .slider {
+            box-shadow: 0 0 1px #2196F3;
+        }
+
+        input:checked + .slider:before {
+            -webkit-transform: translateX(26px);
+            -ms-transform: translateX(26px);
+            transform: translateX(26px);
+        }
+
+        /* Rounded sliders */
+        .slider.round {
+            border-radius: 34px;
+        }
+
+        .slider.round:before {
+            border-radius: 50%;
+        }
     </style>
 
 </head>
 <body>
     <div class="container">
+        <p class="notice">
+            Turn me on! Then wait...
+            <label class="switch">
+                <input type="checkbox" id="speechCheckBox">
+                <span class="slider round"></span>
+            </label>
+        </p>
+        
         <audio id="milkCows" controls autoplay="true" volume="0.0">
             <source src="I Milk Cows.mp3" type="audio/mpeg">
             Your browser does not support the audio element.
@@ -48,6 +131,8 @@
     http://www.hashemian.com/
     -->
     <script language="JavaScript">
+        var beerCrackAudio = new Audio('beer_crack.mp3');
+
         var aud = document.getElementById("milkCows");
         aud.volume = 0.2;
 
@@ -100,6 +185,12 @@
                 ReInit = true;
             }
 
+            if(secs % 60 === 6)
+                speakTime(secs);
+            
+            if(secs % 60 === 0)
+                playCrack();
+
             DisplayStr = DisplayFormat.replace(/%%D%%/g, calcage(secs, 86400, 100000));
             DisplayStr = DisplayStr.replace(/%%H%%/g, calcage(secs, 3600, 24));
             DisplayStr = DisplayStr.replace(/%%M%%/g, calcage(secs, 60, 60));
@@ -140,6 +231,31 @@
                 ddiff = new Date(dthen - dnow);
             gsecs = Math.floor(ddiff.valueOf() / 1000);
             CountBack(gsecs);
+        }
+
+        function speakTime(secs) {
+            if(!isSpeechEnabled())
+                return;
+
+            var text = 'On the next crack, the time will be %%D%% Sleeps %%H%% Hours %%M%% Minutes';
+            text = text.replace(/%%D%%/g, Math.floor(secs / 86400).toString());
+            text = text.replace(/%%H%%/g, (Math.floor(secs / 3600) % 24).toString());
+            text = text.replace(/%%M%%/g, (Math.floor(secs / 60) % 60).toString());
+            console.log(text);
+
+            window.speechSynthesis.speak(new SpeechSynthesisUtterance(text));
+        }
+
+        function playCrack() {
+            if(!isSpeechEnabled())
+                return;
+
+            console.log("Crack!");
+            beerCrackAudio.play();
+        }
+
+        function isSpeechEnabled() {
+            return document.getElementById('speechCheckBox').checked;
         }
 
         init();
